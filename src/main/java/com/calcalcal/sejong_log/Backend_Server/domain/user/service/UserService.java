@@ -272,7 +272,6 @@ public class UserService {
         User user = getUser(request);
 
         user.setName(userInfoRequest.getName());
-        user.setEmail(userInfoRequest.getEmail());
         user.setDepartment(userInfoRequest.getDepartment());
 
         try {

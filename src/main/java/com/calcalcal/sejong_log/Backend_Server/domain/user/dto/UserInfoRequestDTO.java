@@ -6,6 +6,5 @@ import lombok.Getter;
 @Getter
 public class UserInfoRequestDTO {
     @NotBlank private String name;
-    @NotBlank private String email;
     @NotBlank private String department;
 }
