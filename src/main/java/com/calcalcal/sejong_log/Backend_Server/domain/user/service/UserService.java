@@ -3,6 +3,7 @@ package com.calcalcal.sejong_log.Backend_Server.domain.user.service;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Category;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.repository.CategoryRepository;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dao.ScheduleRepository;
+import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.EnrolledScheduleDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.entity.Schedule;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.LoginRequestDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.SignupRequestDTO;
@@ -118,10 +119,11 @@ public class UserService {
         }
     }
 
-    public List<EnrolledSchedule> getEnrolledSchedules(HttpServletRequest request) {
+    public List<EnrolledScheduleDTO> getEnrolledSchedules(HttpServletRequest request) {
         User user = getUser(request);
 
-        return enrolledScheduleRepository.getEnrolledSchedulesByUser(user);
+        return enrolledScheduleRepository.getEnrolledSchedulesByUser(user).
+                stream().map(EnrolledScheduleDTO::of).toList();
     }
 
     public void subscribeCategory(HttpServletRequest request, String categoryName) throws BaseException {
