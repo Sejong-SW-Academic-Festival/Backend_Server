@@ -49,4 +49,13 @@ public class CategoryController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    @GetMapping("/find-department/{departmentName}")
+    public BaseResponse<?> findCategory(@PathVariable String departmentName) {
+        try {
+            return new BaseResponse<>(categoryService.searchDepartment(departmentName));
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }

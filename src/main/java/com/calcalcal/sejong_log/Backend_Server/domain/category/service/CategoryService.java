@@ -3,6 +3,7 @@ package com.calcalcal.sejong_log.Backend_Server.domain.category.service;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.common.CategoryType;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.CategoryAddDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.CategoryDTO;
+import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.SingleCategoryDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Category;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Department;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.repository.CategoryRepository;
@@ -44,6 +45,12 @@ public class CategoryService {
         return CategoryDTO.of(categoryRepository.findCategoryByName(name)
                 .orElseThrow(() -> new BaseException(CATEGORY_NOT_EXIST))
         );
+    }
+
+    public List<SingleCategoryDTO> searchDepartment(String name) {
+        return categoryRepository.findCategoryByNameStartsWithAndCategoryTypeIs(name, CategoryType.DEPARTMENT)
+                .stream().map(SingleCategoryDTO::of)
+                .collect(Collectors.toList());
     }
 
     public void addCategory(CategoryAddDTO categoryAddDTO) throws BaseException {
