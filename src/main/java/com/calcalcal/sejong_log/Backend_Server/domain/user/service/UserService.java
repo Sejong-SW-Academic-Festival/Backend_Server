@@ -122,7 +122,7 @@ public class UserService {
     public List<EnrolledScheduleDTO> getEnrolledSchedules(HttpServletRequest request) {
         User user = getUser(request);
 
-        return enrolledScheduleRepository.getEnrolledSchedulesByUser(user).
+        return enrolledScheduleRepository.getEnrolledSchedulesByUserOrderBySchedule_StartDateAsc(user).
                 stream().map(EnrolledScheduleDTO::of).toList();
     }
 
@@ -210,7 +210,7 @@ public class UserService {
         Schedule schedule = scheduleRepository.findScheduleByName(scheduleName)
                 .orElseThrow(() -> new BaseException(SCHEDULE_NOT_EXIST));
 
-        bookedScheduleRepository.findBookedScheduleByUserAndSchedule(user, schedule)
+        bookedScheduleRepository.findBookedScheduleByUserAndScheduleOrderBySchedule_StartDateAsc(user, schedule)
                 .ifPresent(s -> {
                     throw new BaseException(ALREADY_BOOKED);
                 });
@@ -233,7 +233,7 @@ public class UserService {
         Schedule schedule = scheduleRepository.findScheduleByName(scheduleName)
                 .orElseThrow(() -> new BaseException(SCHEDULE_NOT_EXIST));
 
-        BookedSchedule bookedSchedule = bookedScheduleRepository.findBookedScheduleByUserAndSchedule(user, schedule)
+        BookedSchedule bookedSchedule = bookedScheduleRepository.findBookedScheduleByUserAndScheduleOrderBySchedule_StartDateAsc(user, schedule)
                 .orElseThrow(() -> new BaseException(NOT_BOOKED));
 
         try {

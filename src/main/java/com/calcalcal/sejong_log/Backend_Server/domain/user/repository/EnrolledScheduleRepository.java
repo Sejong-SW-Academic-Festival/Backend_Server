@@ -12,5 +12,5 @@ import java.util.Optional;
 @Repository
 public interface EnrolledScheduleRepository extends JpaRepository<EnrolledSchedule, Long> {
      Optional<EnrolledSchedule> findEnrolledScheduleByUserAndSchedule(User user, Schedule schedule);
-     List<EnrolledSchedule> getEnrolledSchedulesByUser(User user);
+     List<EnrolledSchedule> getEnrolledSchedulesByUserOrderBySchedule_StartDateAsc(User user);
 }
