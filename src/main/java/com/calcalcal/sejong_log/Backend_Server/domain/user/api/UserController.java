@@ -162,10 +162,7 @@ public class UserController {
         }
     }
 
-    /**
-     * GetMapping("/get-book-schedule")
-     *
-     */
+
     @GetMapping("/get-booked-schedules")
     public BaseResponse<?> getBookedSchedule(HttpServletRequest request) {
         try {
