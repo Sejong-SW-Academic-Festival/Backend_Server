@@ -6,9 +6,11 @@ import com.calcalcal.sejong_log.Backend_Server.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BookedScheduleRepository extends JpaRepository<BookedSchedule, Long> {
-     Optional<BookedSchedule> findBookedScheduleByUserAndScheduleOrderBySchedule_StartDateAsc(User user, Schedule schedule);
+     Optional<BookedSchedule> findBookedScheduleByUserAndSchedule(User user, Schedule schedule);
+     List<BookedSchedule> findBookedScheduleByUserOrderBySchedule_StartDateAsc(User user);
 }

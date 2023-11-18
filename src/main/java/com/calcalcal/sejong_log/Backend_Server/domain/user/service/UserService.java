@@ -3,6 +3,7 @@ package com.calcalcal.sejong_log.Backend_Server.domain.user.service;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Category;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.repository.CategoryRepository;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dao.ScheduleRepository;
+import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.BookedSchduleDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.EnrolledScheduleDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.entity.Schedule;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.LoginRequestDTO;
@@ -210,7 +211,7 @@ public class UserService {
         Schedule schedule = scheduleRepository.findScheduleByName(scheduleName)
                 .orElseThrow(() -> new BaseException(SCHEDULE_NOT_EXIST));
 
-        bookedScheduleRepository.findBookedScheduleByUserAndScheduleOrderBySchedule_StartDateAsc(user, schedule)
+        bookedScheduleRepository.findBookedScheduleByUserAndSchedule(user, schedule)
                 .ifPresent(s -> {
                     throw new BaseException(ALREADY_BOOKED);
                 });
@@ -233,7 +234,7 @@ public class UserService {
         Schedule schedule = scheduleRepository.findScheduleByName(scheduleName)
                 .orElseThrow(() -> new BaseException(SCHEDULE_NOT_EXIST));
 
-        BookedSchedule bookedSchedule = bookedScheduleRepository.findBookedScheduleByUserAndScheduleOrderBySchedule_StartDateAsc(user, schedule)
+        BookedSchedule bookedSchedule = bookedScheduleRepository.findBookedScheduleByUserAndSchedule(user, schedule)
                 .orElseThrow(() -> new BaseException(NOT_BOOKED));
 
         try {
@@ -241,6 +242,13 @@ public class UserService {
         } catch (Exception e) {
             throw new BaseException(DATABASE_DELETE_ERROR);
         }
+    }
+
+    public List<BookedSchduleDTO> getBookedSchedule(HttpServletRequest request) {
+        User user = getUser(request);
+
+        return bookedScheduleRepository.findBookedScheduleByUserOrderBySchedule_StartDateAsc(user)
+                .stream().map(BookedSchduleDTO::of).toList();
     }
 
     private User getUser(HttpServletRequest request) throws BaseException {

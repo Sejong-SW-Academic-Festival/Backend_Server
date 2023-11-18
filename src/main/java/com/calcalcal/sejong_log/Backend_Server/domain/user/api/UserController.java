@@ -161,4 +161,17 @@ public class UserController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    /**
+     * GetMapping("/get-book-schedule")
+     *
+     */
+    @GetMapping("/get-booked-schedules")
+    public BaseResponse<?> getBookedSchedule(HttpServletRequest request) {
+        try {
+            return new BaseResponse<>(userService.getBookedSchedule(request));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
