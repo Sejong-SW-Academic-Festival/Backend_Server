@@ -86,7 +86,7 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> getAllSchedules() {
-        return scheduleRepository.getAllByCategoryNotNull().stream()
+        return scheduleRepository.findAllByOrderByStartDateAsc().stream()
                 .map(ScheduleDTO::of).toList();
     }
 }

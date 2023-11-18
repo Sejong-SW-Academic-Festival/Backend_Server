@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<Schedule> findScheduleByName(String name);
     List<Schedule> getAllByCategoryNotNull();
+
+    List<Schedule> findAllByOrderByStartDateAsc();
 }
