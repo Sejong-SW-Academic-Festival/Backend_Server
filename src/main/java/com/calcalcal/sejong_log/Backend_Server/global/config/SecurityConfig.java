@@ -22,6 +22,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final RedisTemplate<String, String> redisTemplate;
+    private final CorsConfig corsConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,6 +31,7 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(
                         new JwtAuthorizationFilter(userRepository, jwtUtils, redisTemplate),
                         BasicAuthenticationFilter.class
