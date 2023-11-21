@@ -56,9 +56,6 @@ public class ScheduleService {
         }
     }
 
-    public void removeSchedule() {
-        // TODO: Implement removing event.
-    }
 
     private void preorder_traverse(CategoryDTO categoryDTO, List<String> childCategoryNames) {
         childCategoryNames.add(categoryDTO.getName());

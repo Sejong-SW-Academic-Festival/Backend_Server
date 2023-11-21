@@ -15,6 +15,7 @@ public class EnrolledScheduleDTO {
     private Long id;
     private String name;
     private String description;
+    private String location;
     private Long category_id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -24,6 +25,7 @@ public class EnrolledScheduleDTO {
                 schedule.getSchedule().getId(),
                 schedule.getSchedule().getName(),
                 schedule.getSchedule().getDescription(),
+                schedule.getSchedule().getLocation(),
                 schedule.getSchedule().getCategory().getId(),
                 schedule.getSchedule().getStartDate(),
                 schedule.getSchedule().getEndDate()

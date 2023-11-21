@@ -17,6 +17,8 @@ public class ScheduleAddDTO {
     @NotBlank
     private String categoryName;
 
+    private String location;
+
     @JsonFormat
     private LocalDateTime startDate;
 

@@ -19,6 +19,7 @@ public class ScheduleDTO {
     private Long id;
     private String name;
     private String description;
+    private String location;
     private Long category_id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -29,6 +30,7 @@ public class ScheduleDTO {
                 schedule.getId(),
                 schedule.getName(),
                 schedule.getDescription(),
+                schedule.getLocation(),
                 schedule.getCategory().getId(),
                 schedule.getStartDate(),
                 schedule.getEndDate(),

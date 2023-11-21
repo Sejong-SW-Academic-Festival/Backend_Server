@@ -17,6 +17,7 @@ public class BookedSchduleDTO {
     private Long id;
     private String name;
     private String description;
+    private String location;
     private Long category_id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -26,6 +27,7 @@ public class BookedSchduleDTO {
                 bookedSchedule.getSchedule().getId(),
                 bookedSchedule.getSchedule().getName(),
                 bookedSchedule.getSchedule().getDescription(),
+                bookedSchedule.getSchedule().getLocation(),
                 bookedSchedule.getSchedule().getCategory().getId(),
                 bookedSchedule.getSchedule().getStartDate(),
                 bookedSchedule.getSchedule().getEndDate()

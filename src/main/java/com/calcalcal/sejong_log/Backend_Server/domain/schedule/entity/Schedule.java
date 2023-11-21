@@ -28,6 +28,9 @@ public class Schedule extends BaseTimestampEntity {
     @Column(name = "description", nullable = false, length = 150)
     private String description;
 
+    @Column(name = "location", nullable = true, length = 50)
+    private String location;
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private Category category;
@@ -45,9 +48,10 @@ public class Schedule extends BaseTimestampEntity {
     private List<BookedSchedule> likedUsers;
 
     @Builder
-    public Schedule(String name, String description, Category category, LocalDateTime startDate, LocalDateTime endDate) {
+    public Schedule(String name, String description, String location, Category category, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.description = description;
+        this.location = location;
         this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
