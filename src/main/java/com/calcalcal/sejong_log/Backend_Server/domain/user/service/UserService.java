@@ -1,5 +1,6 @@
 package com.calcalcal.sejong_log.Backend_Server.domain.user.service;
 
+import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.SubscribeCategoryDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Category;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.repository.CategoryRepository;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dao.ScheduleRepository;
@@ -164,6 +165,13 @@ public class UserService {
         } catch (Exception e) {
             throw new BaseException(DATABASE_DELETE_ERROR);
         }
+    }
+
+    public List<SubscribeCategoryDTO> getSubscribeCategory(HttpServletRequest request) {
+        User user = getUser(request);
+
+        return subscribedCategoryRepository.findSubscribedCategoriesByUser(user)
+                .stream().map(SubscribeCategoryDTO::of).toList();
     }
 
     public void enrollSchedule(HttpServletRequest request, String scheduleName) throws BaseException {

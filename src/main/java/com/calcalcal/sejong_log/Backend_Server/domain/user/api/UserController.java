@@ -122,6 +122,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/get-subscribe-category")
+    public BaseResponse<?> getSubscribeCategory(HttpServletRequest request) {
+        try {
+            return new BaseResponse<>(userService.getSubscribeCategory(request));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     @PutMapping("/enroll-schedule/{scheduleName}")
     public BaseResponse<?> enrollSchedule(HttpServletRequest request, @PathVariable String scheduleName) {
         try {
