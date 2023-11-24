@@ -30,6 +30,9 @@ public class Schedule extends BaseTimestampEntity {
     @Column(name = "location", nullable = true, length = 50)
     private String location;
 
+    @Column(name = "liked", nullable = false)
+    private boolean liked;
+
     @Builder.Default
     @Column(name = "user_email", nullable = true)
     private String userEmail = null;

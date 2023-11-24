@@ -244,6 +244,14 @@ public class UserService {
 
         List<ScheduleDTO> result = new ArrayList<>();
 
+        List<BookedSchedule> bookedSchedules = bookedScheduleRepository.findBookedScheduleByUser(user);
+        allSchedules.forEach(schedule -> {
+            bookedSchedules.forEach(bookedSchedule -> {
+                if(schedule.getName().equals(bookedSchedule.getSchedule().getName()))
+                    schedule.setLiked(true);
+            });
+        });
+
         allSchedules.forEach(schedule -> {
             if (schedule.getCategoryName().equals("개인일정") && !schedule.getEnrolledUserEmail().equals(user.getEmail()))
                 return;

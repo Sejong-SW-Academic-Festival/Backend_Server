@@ -195,7 +195,7 @@ public class UserController {
         }
     }
 
-    /*
+
     @PutMapping("/book-schedule/{scheduleName}")
     public BaseResponse<?> bookSchedule(HttpServletRequest request, @PathVariable String scheduleName) {
         try {
@@ -225,5 +225,5 @@ public class UserController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-    */
+
 }

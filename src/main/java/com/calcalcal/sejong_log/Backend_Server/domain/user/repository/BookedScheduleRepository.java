@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface BookedScheduleRepository extends JpaRepository<BookedSchedule, Long> {
      Optional<BookedSchedule> findBookedScheduleByUserAndSchedule(User user, Schedule schedule);
      List<BookedSchedule> findBookedScheduleByUserOrderBySchedule_StartDateAsc(User user);
+     List<BookedSchedule> findBookedScheduleByUser(User user);
 }
