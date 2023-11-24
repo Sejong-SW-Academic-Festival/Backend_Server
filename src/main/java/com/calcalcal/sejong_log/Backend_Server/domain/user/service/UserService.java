@@ -232,6 +232,8 @@ public class UserService {
         allSchedules.forEach((schedule -> {
             subscribedCategories.forEach((subscribedCategory -> {
                 if(schedule.getCategoryName().equals(subscribedCategory.getCategory().getName())) {
+                    if(schedule.getCategoryName().equals("개인일정") && !schedule.getEnrolledUserEmail().equals(user.getEmail()))
+                        return;
                     result.add(schedule);
                 }
             }));
