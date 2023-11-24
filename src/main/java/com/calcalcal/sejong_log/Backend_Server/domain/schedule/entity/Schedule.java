@@ -31,7 +31,7 @@ public class Schedule extends BaseTimestampEntity {
     private String location;
 
     @Builder.Default
-    @Column(name = "userEmail", nullable = true)
+    @Column(name = "user_email", nullable = true)
     private String userEmail = null;
 
     @ManyToOne

@@ -110,10 +110,19 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get-schedules")
-    public BaseResponse<?> getSchedules(HttpServletRequest request) {
+    @GetMapping("/get-schedules-in-subscribed-categories")
+    public BaseResponse<?> getSchedulesInSubscribedCategories(HttpServletRequest request) {
         try {
             return new BaseResponse<>(userService.getAllSchedulesInSubscribedCategories(request));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @GetMapping("/get-all-schedules")
+    public BaseResponse<?> getAllSchedules(HttpServletRequest request) {
+        try {
+            return new BaseResponse<>(userService.getAllSchedules(request));
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

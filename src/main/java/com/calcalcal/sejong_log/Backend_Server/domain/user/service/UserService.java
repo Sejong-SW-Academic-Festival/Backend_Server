@@ -221,23 +221,34 @@ public class UserService {
 
     public List<ScheduleDTO> getAllSchedulesInSubscribedCategories(HttpServletRequest request) {
         User user = getUser(request);
+        List<ScheduleDTO> allSchedules = getAllSchedules(request);
+        List<ScheduleDTO> result = new ArrayList<>();
+
+        List<SubscribedCategory> subscribedCategories = subscribedCategoryRepository.findSubscribedCategoriesByUser(user);
+
+        allSchedules.forEach(schedule -> {
+            subscribedCategories.forEach(subscribedCategory -> {
+                if(schedule.getCategoryName().equals(subscribedCategory.getCategory().getName()))
+                    result.add(schedule);
+            });
+        });
+
+        return result;
+    }
+
+    public List<ScheduleDTO> getAllSchedules(HttpServletRequest request) {
+        User user = getUser(request);
 
         List<ScheduleDTO> allSchedules = scheduleRepository.findAllByOrderByStartDateAsc().stream()
                 .map(ScheduleDTO::of).toList();
 
-        List<SubscribedCategory> subscribedCategories = subscribedCategoryRepository.findSubscribedCategoriesByUser(user);
-
         List<ScheduleDTO> result = new ArrayList<>();
 
-        allSchedules.forEach((schedule -> {
-            subscribedCategories.forEach((subscribedCategory -> {
-                if(schedule.getCategoryName().equals(subscribedCategory.getCategory().getName())) {
-                    if(schedule.getCategoryName().equals("개인일정") && !schedule.getEnrolledUserEmail().equals(user.getEmail()))
-                        return;
-                    result.add(schedule);
-                }
-            }));
-        }));
+        allSchedules.forEach(schedule -> {
+            if (schedule.getCategoryName().equals("개인일정") && !schedule.getEnrolledUserEmail().equals(user.getEmail()))
+                return;
+            result.add(schedule);
+        });
 
         return result;
     }
