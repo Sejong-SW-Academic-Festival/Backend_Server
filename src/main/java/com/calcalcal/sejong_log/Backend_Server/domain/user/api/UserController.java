@@ -1,5 +1,6 @@
 package com.calcalcal.sejong_log.Backend_Server.domain.user.api;
 
+import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.ScheduleAddDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.LoginRequestDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.SignupRequestDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.UserInfoRequestDTO;
@@ -93,6 +94,31 @@ public class UserController {
         }
     }
 
+    @PostMapping("/add-personal-schedule")
+    public BaseResponse<?> addPsersonalSchedule(HttpServletRequest request, @Valid @RequestBody ScheduleAddDTO scheduleAddDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            String message = result.getFieldError().getDefaultMessage();
+            return new BaseResponse<>(false, 400, message);
+        }
+
+        try {
+            userService.addSchedule(request, scheduleAddDTO);
+            userService.enrollSchedule(request, scheduleAddDTO.getName());
+            return new BaseResponse<>("성공적으로 등록했습니다!");
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @GetMapping("/get-schedules")
+    public BaseResponse<?> getSchedules(HttpServletRequest request) {
+        try {
+            return new BaseResponse<>(userService.getAllSchedulesInSubscribedCategories(request));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     @GetMapping("/get-enrolled-schedules")
     public BaseResponse<?> getEnrolledSchedules(HttpServletRequest request) {
         try {
@@ -122,10 +148,19 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get-subscribe-category")
+    @GetMapping("/get-subscribed-category")
     public BaseResponse<?> getSubscribeCategory(HttpServletRequest request) {
         try {
             return new BaseResponse<>(userService.getSubscribeCategory(request));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @GetMapping("/get-all-category-list")
+    public BaseResponse<?> getAllCategories(HttpServletRequest request) {
+        try {
+            return new BaseResponse<>(userService.getAllCategoriesWithUserSubscribedOrNot(request));
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
@@ -151,6 +186,7 @@ public class UserController {
         }
     }
 
+    /*
     @PutMapping("/book-schedule/{scheduleName}")
     public BaseResponse<?> bookSchedule(HttpServletRequest request, @PathVariable String scheduleName) {
         try {
@@ -180,4 +216,5 @@ public class UserController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+    */
 }

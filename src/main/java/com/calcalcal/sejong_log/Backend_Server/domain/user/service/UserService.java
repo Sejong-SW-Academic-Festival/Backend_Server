@@ -1,11 +1,14 @@
 package com.calcalcal.sejong_log.Backend_Server.domain.user.service;
 
+import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.CategoryDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.dto.SubscribeCategoryDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.entity.Category;
 import com.calcalcal.sejong_log.Backend_Server.domain.category.repository.CategoryRepository;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dao.ScheduleRepository;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.BookedSchduleDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.EnrolledScheduleDTO;
+import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.ScheduleAddDTO;
+import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.ScheduleDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.entity.Schedule;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.LoginRequestDTO;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.SignupRequestDTO;
@@ -32,9 +35,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.calcalcal.sejong_log.Backend_Server.global.properties.JwtProperties.*;
 import static com.calcalcal.sejong_log.Backend_Server.global.response.BaseResponseStatus.*;
@@ -213,6 +219,26 @@ public class UserService {
         }
     }
 
+    public List<ScheduleDTO> getAllSchedulesInSubscribedCategories(HttpServletRequest request) {
+        User user = getUser(request);
+
+        List<ScheduleDTO> allSchedules = scheduleRepository.findAllByOrderByStartDateAsc().stream()
+                .map(ScheduleDTO::of).toList();
+
+        List<SubscribedCategory> subscribedCategories = subscribedCategoryRepository.findSubscribedCategoriesByUser(user);
+
+        List<ScheduleDTO> result = new ArrayList<>();
+
+        allSchedules.forEach((schedule -> {
+            subscribedCategories.forEach((subscribedCategory -> {
+                if(schedule.getCategoryName().equals(subscribedCategory.getCategory().getName())) {
+                    result.add(schedule);
+                }
+            }));
+        }));
+
+        return result;
+    }
     public void bookSchedule(HttpServletRequest request, String scheduleName) throws BaseException {
         User user = getUser(request);
 
@@ -259,6 +285,21 @@ public class UserService {
                 .stream().map(BookedSchduleDTO::of).toList();
     }
 
+    public List<CategoryDTO> getAllCategoriesWithUserSubscribedOrNot(HttpServletRequest request) {
+        User user = getUser(request);
+
+        List<SubscribedCategory> subscribedCategories = subscribedCategoryRepository.findSubscribedCategoriesByUser(user);
+        List<CategoryDTO> categoryList = categoryRepository.getAllByParentCategoryIsNull().stream().map(CategoryDTO::of).collect(Collectors.toList());
+
+        categoryList.forEach((category) -> {
+            subscribedCategories.forEach((subscribedCategory -> {
+                if(category.getId().equals(subscribedCategory.getId()))
+                    category.setSubscribed(true);
+            }));
+        });
+        return categoryList;
+    }
+
     private User getUser(HttpServletRequest request) throws BaseException {
         String jwtHeader = request.getHeader(JWT_ACCESS_TOKEN_HEADER_NAME);
 
@@ -292,6 +333,40 @@ public class UserService {
 
         try {
             userRepository.save(user);
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_INSERT_ERROR);
+        }
+    }
+
+    public void addSchedule(HttpServletRequest request, ScheduleAddDTO scheduleAddDTO) throws BaseException {
+        User user = getUser(request);
+
+        String scheduleName = scheduleAddDTO.getName();
+        String scheduleDescription = scheduleAddDTO.getDescription();
+        String categoryName = scheduleAddDTO.getCategoryName();
+        LocalDateTime scheduleStartDate = scheduleAddDTO.getStartDate();
+        LocalDateTime scheduleEndDate = scheduleAddDTO.getEndDate();
+
+        Category category = categoryRepository.findCategoryByName(categoryName)
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_EXIST));
+
+        scheduleRepository.findScheduleByName(scheduleName)
+                .ifPresent(
+                        s -> {
+                            throw new BaseException(SCHEDULE_EXIST);
+                        });
+
+        Schedule newSchedule = Schedule.builder()
+                .name(scheduleName)
+                .description(scheduleDescription)
+                .userEmail(user.getEmail())
+                .category(category)
+                .startDate(scheduleStartDate)
+                .endDate(scheduleEndDate)
+                .build();
+
+        try {
+            scheduleRepository.save(newSchedule);
         } catch (Exception e) {
             throw new BaseException(DATABASE_INSERT_ERROR);
         }

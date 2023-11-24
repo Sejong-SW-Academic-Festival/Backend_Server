@@ -20,7 +20,8 @@ public class ScheduleDTO {
     private String name;
     private String description;
     private String location;
-    private Long category_id;
+    private String categoryName;
+    private String categoryType;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private List<String> enrolledUserEmail;
@@ -31,7 +32,8 @@ public class ScheduleDTO {
                 schedule.getName(),
                 schedule.getDescription(),
                 schedule.getLocation(),
-                schedule.getCategory().getId(),
+                schedule.getCategory().getName(),
+                schedule.getCategory().getCategoryType().name(),
                 schedule.getStartDate(),
                 schedule.getEndDate(),
                 schedule.getEnrolledUsers().stream().map(EnrolledSchedule::of)

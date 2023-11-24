@@ -5,16 +5,15 @@ import com.calcalcal.sejong_log.Backend_Server.domain.user.entity.BookedSchedule
 import com.calcalcal.sejong_log.Backend_Server.domain.user.entity.EnrolledSchedule;
 import com.calcalcal.sejong_log.Backend_Server.global.entity.BaseTimestampEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 @Table(name = "schedule")
 public class Schedule extends BaseTimestampEntity {
@@ -31,6 +30,10 @@ public class Schedule extends BaseTimestampEntity {
     @Column(name = "location", nullable = true, length = 50)
     private String location;
 
+    @Builder.Default
+    @Column(name = "userEmail", nullable = true)
+    private String userEmail = null;
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private Category category;
@@ -46,14 +49,4 @@ public class Schedule extends BaseTimestampEntity {
 
     @OneToMany(mappedBy = "schedule")
     private List<BookedSchedule> likedUsers;
-
-    @Builder
-    public Schedule(String name, String description, String location, Category category, LocalDateTime startDate, LocalDateTime endDate) {
-        this.name = name;
-        this.description = description;
-        this.location = location;
-        this.category = category;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
 }
