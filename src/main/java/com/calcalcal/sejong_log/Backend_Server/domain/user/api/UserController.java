@@ -1,10 +1,7 @@
 package com.calcalcal.sejong_log.Backend_Server.domain.user.api;
 
 import com.calcalcal.sejong_log.Backend_Server.domain.schedule.dto.ScheduleAddDTO;
-import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.LoginRequestDTO;
-import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.SignupRequestDTO;
-import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.UserInfoRequestDTO;
-import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.UserInfoResponseDTO;
+import com.calcalcal.sejong_log.Backend_Server.domain.user.dto.*;
 import com.calcalcal.sejong_log.Backend_Server.domain.user.service.UserService;
 import com.calcalcal.sejong_log.Backend_Server.global.exception.BaseException;
 import com.calcalcal.sejong_log.Backend_Server.global.response.BaseResponse;
@@ -85,9 +82,13 @@ public class UserController {
     }
 
     @PostMapping("/withdraw")
-    public BaseResponse<String> withdraw(@Valid @RequestBody String password, HttpServletRequest request) {
+    public BaseResponse<String> withdraw(HttpServletRequest request, @Valid @RequestBody UserWithdrawDTO userWithdrawDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            String message = result.getFieldError().getDefaultMessage();
+            return new BaseResponse<>(false, 400, message);
+        }
         try {
-            userService.withDraw(request, password);
+            userService.withDraw(request, userWithdrawDTO.getPassword());
             return new BaseResponse<>("회원탈퇴에 성공했습니다");
         } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());
